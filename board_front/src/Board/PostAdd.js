@@ -26,7 +26,7 @@ class PostAdd extends Component {
             ...this.state,
             content: editor.getData()
         });
-    }
+    };
 
     handleClick = (e) => {
         console.log(this.props.postId);

@@ -1,34 +1,11 @@
 import React, {Component} from 'react';
 import {inject, observer} from "mobx-react";
-import {Link, Redirect} from "react-router-dom";
+import PostEditComp from "./PostEditComp";
 
 
 @inject('stores')
 @observer
 class PostView extends Component {
-    state = {
-        goToList: false,
-        goToEdit: false
-    }
-    handleClickDelete = (e) =>{
-        if(e.target.innerHTML === ' 삭제'){
-            if(window.confirm('삭제하시겠습니까?') === false) return;
-            if(this.props.stores.PostStore.deleteItem(this.props.postId)) {
-                this.props.stores.PostStore.fetchItems();
-                this.setState({
-                    goToList: true
-                });
-            }
-        }else{
-        }
-
-    };
-
-    handleClickModify = (e) =>{
-        this.setState({
-            goToEdit: true
-        })
-    };
 
 
     componentDidMount() {
@@ -36,10 +13,6 @@ class PostView extends Component {
     }
 
     render() {
-        if(this.state.goToList)
-            return <Redirect to="/"/>;
-        if(this.state.goToEdit)
-            return <Redirect to={`/board/edit/${this.props.postId}`}/>;
 
         let p = this.props.stores.PostStore;
         if(!p.viewItem)
@@ -57,9 +30,8 @@ class PostView extends Component {
                     작성시간: {new Date(p.viewItem.created).toLocaleString()}
                 </div>
                 <div>
-                    <button><Link to="/">목록</Link></button>
-                    <button onClick={this.handleClickDelete}>삭제</button>
-                    <button onClick={this.handleClickModify}>수정</button>
+
+                    <PostEditComp userId={p.viewItem.user_id}/>
                 </div>
             </div>
         );

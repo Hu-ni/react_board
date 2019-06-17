@@ -14,13 +14,13 @@ class ProfileStore{
         ProfileStore.__instance = this;
     }
 
-    @observable viewItem = null;
+    @observable user = null;
 
-    @action fetchItem = async (account) => {
+    @action fetchItem = async (id) => {
         try{
-            this.viewItem = null;
+            this.user = null;
             let response = await axios({
-                url: `http://localhost:8080/user/findByAccount/${account}`,
+                url: `http://localhost:8080/user/findById/${id}`,
                 method: 'get',
                 header: {
                     'Content-type': 'application/json; charset=UTF-8'
@@ -29,12 +29,14 @@ class ProfileStore{
             });
             console.log(response);
             if(response.status === 200)
-                this.viewItem = response.data;
+                this.user = response.data;
         }catch (ex) {
             alert(ex.toLocaleString());
         }
     };
 
+
+    @observable viewItem = null;
     @action login = async (user) => {
         try{
             this.viewItem = null;
@@ -80,7 +82,11 @@ class ProfileStore{
                 method: 'delete',
                 timeout: 3000
             });
-            return (response.status === 200);
+            if(response.status === 200){
+                this.viewItem = null;
+                return true;
+            }else
+                return false;
         }catch(ex){
             alert(ex.toLocaleString());
             return false;

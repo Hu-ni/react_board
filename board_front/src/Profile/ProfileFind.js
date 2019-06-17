@@ -12,6 +12,7 @@ class ProfileFind extends Component {
         account: '',
         password: '',
         goToList: false,
+        goToJoin: false,
     };
 
     handleChange = (e) => {
@@ -20,25 +21,29 @@ class ProfileFind extends Component {
         })
     };
 
-    handleLogin = (e) =>{
-        this.props.stores.ProfileStore.login(this.state);
+    handleLogin = async (e) =>{
+        await this.props.stores.ProfileStore.login(this.state);
+
+        this.setState({
+            ...this.state,
+            id: this.props.stores.ProfileStore.viewItem.id,
+            goToList: true,
+        });
 
     };
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(prevProps.stores !== this.props.stores);
-        if(prevProps.stores.ProfileStore !== this.props.stores.ProfileStore){
-            this.setState({
-                ...this.state,
-                id: this.props.stores.ProfileStore.viewItem.id,
-                goToList: true,
-            })
-        }
+    handleJoin = (e) =>{
+        this.setState({
+            ...this.state,
+            goToJoin: true,
+        })
     }
 
     render() {
-        // if(this.state.goToList)
-        //     return <Redirect to={`/user/view/${this.state.id}`}/>;
+        if(this.state.goToList)
+            return <Redirect to={`/user/view/${this.state.id}`}/>;
+        if(this.state.goToJoin)
+            return <Redirect to={`/user/add`}/>;
         return (
             <div>
                 <div>
@@ -51,7 +56,7 @@ class ProfileFind extends Component {
                 </div>
                 <div>
                     <button onClick={this.handleLogin}>로그인</button>
-                    <button>회원가입</button>
+                    <button onClick={this.handleJoin}>회원가입</button>
                 </div>
             </div>
         );
