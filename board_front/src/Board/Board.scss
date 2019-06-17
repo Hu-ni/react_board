@@ -1,0 +1,52 @@
+.board {
+  margin: 30px;
+  width: calc(100vw - 62px);
+}
+.board-list-item {
+  display: table;
+  border-bottom: 1px solid silver;
+  cursor: pointer;
+  width: 100%;
+
+  &:hover {
+    background-color: #aaaaaa;
+  }
+
+  > div {
+    display: table-cell;
+    width: 100px;
+
+    &:first-child {
+      width: calc(100% - 200px);
+    }
+  }
+}
+
+.board-view-item {
+
+  > div {
+    border-bottom: 1px solid silver;
+    .board-view-item-content {
+      width: 100%;
+      min-height: 40vh;
+    }
+  }
+}
+
+.board-add {
+  .board-add-header {
+    display: flex;
+    justify-content: space-between;
+    > div:first-child {
+      width: 100px;
+    }
+    input {
+      width: calc(100vw - 60px - 100px);
+    }
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 40vh;
+  }
+}

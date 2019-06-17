@@ -1,0 +1,110 @@
+import {observable, action} from "mobx";
+
+import axios from 'axios';
+
+class ProfileStore{
+    static __instance = null;
+    static getInstance(){
+        if(ProfileStore.__instance === null){
+            ProfileStore.__instance = new ProfileStore();
+        }
+        return ProfileStore.__instance;
+    }
+    constructor(){
+        ProfileStore.__instance = this;
+    }
+
+    @observable viewItem = null;
+
+    @action fetchItem = async (account) => {
+        try{
+            this.viewItem = null;
+            let response = await axios({
+                url: `http://localhost:8080/user/findByAccount/${account}`,
+                method: 'get',
+                header: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                timeout: 3000
+            });
+            console.log(response);
+            if(response.status === 200)
+                this.viewItem = response.data;
+        }catch (ex) {
+            alert(ex.toLocaleString());
+        }
+    };
+
+    @action login = async (user) => {
+        try{
+            this.viewItem = null;
+            let response = await axios({
+                url: `http://localhost:8080/user/findByUser?account=${user.account}&password=${user.password}`,
+                method: 'get',
+                header: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                timeout: 3000
+            });
+            console.log(response);
+            if(response.status === 200)
+                this.viewItem = response.data;
+        }catch (ex) {
+            alert(ex.toLocaleString());
+        }
+    };
+
+    @action addItem = async (user) => {
+        try{
+            let response = await axios({
+                url: `http://localhost:8080/user/add`,
+                method: 'post',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                data: JSON.stringify(user),
+                timeout: 3000
+            });
+            return (response.status === 200);
+        }catch(ex){
+            alert(ex.toLocaleString());
+            return false;
+        }
+
+    };
+
+    @action deleteItem = async (userId) => {
+        try{
+            let response = await axios({
+                url: `http://localhost:8080/user/${userId}`,
+                method: 'delete',
+                timeout: 3000
+            });
+            return (response.status === 200);
+        }catch(ex){
+            alert(ex.toLocaleString());
+            return false;
+        }
+    };
+
+    @action modifyItem = async (user) => {
+        try{
+            let response = await axios({
+                url: `http://localhost:8080/user/modify`,
+                method: 'put',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                data: JSON.stringify(user),
+                timeout: 3000
+            });
+            return (response.status === 200);
+        }catch(ex){
+            alert(ex.toLocaleString());
+            return false;
+        }
+
+    };
+}
+
+export default ProfileStore.getInstance();
